@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: mc-postgres
+    environment:
+      POSTGRES_DB: social_network
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mc-account:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GITLAB_TOKEN: ${GITLAB_TOKEN}
+    container_name: mc-account-container
+    ports:
+      - "8081:8081"
+    environment:
+      SERVER_PORT: 8081
+
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: social_network
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
+      AUTH_SERVICE_URL: http://host.docker.internal:8080
+      KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://host.docker.internal:8761/eureka/
+
+      JPA_SHOW_SQL: false
+      JPA_FORMAT_SQL: false
+    depends_on:
+      - postgres
+
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: mc-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - mc-account
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: mc-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  postgres_data:
+  grafana_data:

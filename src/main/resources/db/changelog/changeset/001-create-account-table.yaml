@@ -1,0 +1,105 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-account-table
+      author: korchevskiy
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: phone
+                  type: VARCHAR(255)
+
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: birth_date
+                  type: DATE
+
+              - column:
+                  name: reg_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: last_online_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_online
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_blocked
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: photo
+                  type: VARCHAR(255)
+
+              - column:
+                  name: photo_name
+                  type: VARCHAR(255)
+
+              - column:
+                  name: about
+                  type: VARCHAR(1000)
+
+              - column:
+                  name: city
+                  type: VARCHAR(255)
+
+              - column:
+                  name: country
+                  type: VARCHAR(255)
+
+              - column:
+                  name: created_on
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_on
+                  type: TIMESTAMP
+
+              - column:
+                  name: emoji_status
+                  type: VARCHAR(50)

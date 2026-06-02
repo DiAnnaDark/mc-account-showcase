@@ -1,0 +1,40 @@
+services:
+  mc-account:
+    image: mc-account:latest
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        GITLAB_TOKEN: ${GITLAB_TOKEN}
+
+    container_name: mc-account
+
+    restart: unless-stopped
+
+    ports:
+      - "8081:8081"
+
+    environment:
+      SERVER_PORT: 8081
+
+      DB_HOST: social-postgres
+      DB_PORT: 5432
+      DB_NAME: social_network
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
+      AUTH_SERVICE_URL: lb://mc-auth
+
+      KAFKA_BOOTSTRAP_SERVERS: social-kafka:9092
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://83.166.245.88:8761/eureka/
+
+      JPA_SHOW_SQL: false
+      JPA_FORMAT_SQL: false
+
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    external: true
